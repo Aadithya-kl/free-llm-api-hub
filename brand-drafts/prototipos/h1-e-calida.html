@@ -1,0 +1,182 @@
+<title>H1-e Cálida</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: H1 Fingerprint + Receipts, variant e (Cálida). Same page as H1; only palette, aura shape, seal shape and headline axes change. */
+:root{--bg:#FFF9F6;--panel:#FFFFFF;--ink:#22140F;--muted:#6A5048;--line:#F0E2DB;--control:#9A8179;--accent:#9C4A00;--on-accent:#FFFFFF;--ok:#2F6B1F;--unk:#7F5A00;--bad:#B3261E;--chg:#7A2E8C;--seal-bg:#FFEBD9;--h-text:#D9502A;--h-vision:#C48200;--h-audio:#C2185B;--h-embeddings:#8E7A00;--h-image:#D85A85;--h-ocr:#8B3A2E;--h-rerank:#7B2D6B;--edge:#F0E2DB;--signal:#9C4A00;--glow:none;--blend:normal;--radius:18px;--h1w:760;--h1s:92%;--h1t:none;--h1l:-.03em}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17110F;--panel:#211915;--ink:#FBF1EC;--muted:#C2A89E;--line:#352822;--control:#7A645B;--accent:#FFB25C;--on-accent:#17110F;--ok:#9AD27F;--unk:#F2C14E;--bad:#FF8A7A;--chg:#E0A3F0;--seal-bg:#2E2119;--h-text:#FF7A4D;--h-vision:#F5B21F;--h-audio:#FF5C93;--h-embeddings:#C9B02E;--h-image:#FF9CBC;--h-ocr:#D97A62;--h-rerank:#C77AB8;--edge:#352822;--signal:#FFB25C;--glow:none;--blend:normal;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17110F;--panel:#211915;--ink:#FBF1EC;--muted:#C2A89E;--line:#352822;--control:#7A645B;--accent:#FFB25C;--on-accent:#17110F;--ok:#9AD27F;--unk:#F2C14E;--bad:#FF8A7A;--chg:#E0A3F0;--seal-bg:#2E2119;--h-text:#FF7A4D;--h-vision:#F5B21F;--h-audio:#FF5C93;--h-embeddings:#C9B02E;--h-image:#FF9CBC;--h-ocr:#D97A62;--h-rerank:#C77AB8;--edge:#352822;--signal:#FFB25C;--glow:none;--blend:normal;color-scheme:dark}
+:root{--f-display:'Roboto Flex',system-ui,-apple-system,'Segoe UI',sans-serif;--f-body:'Roboto Flex',system-ui,-apple-system,'Segoe UI',sans-serif;--f-data:'DM Mono',ui-monospace,Menlo,Consolas,monospace;--surf:var(--bg)}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.note{font:12px var(--f-data);color:var(--muted);padding-block:10px;display:flex;gap:6px 16px;flex-wrap:wrap;justify-content:space-between}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:18px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:650 16px var(--f-display);font-stretch:112%;white-space:nowrap}
+.brand .aura{width:28px}
+nav{display:flex;gap:4px;min-width:0;overflow-x:auto}
+nav a{color:var(--muted);text-decoration:none;font:500 14px var(--f-body);padding:6px 10px;border-radius:var(--radius);white-space:nowrap}
+nav a:hover{color:var(--ink);background:var(--line)}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pillbtn{font:500 13px var(--f-data);color:var(--ink);background:transparent;border:1px solid var(--control);border-radius:var(--radius);padding:5px 12px;text-decoration:none;white-space:nowrap;cursor:pointer}
+@media (max-width:760px){nav{display:none}}
+.aura{display:block;aspect-ratio:1;max-width:100%;flex:none}
+.aura svg{display:block;width:100%;height:100%;overflow:visible}
+.aura.old{filter:saturate(.2)}
+.hero{padding-block:48px 18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+h1{font:var(--h1w) clamp(40px,6.2vw,86px)/.95 var(--f-display);font-stretch:var(--h1s);text-transform:var(--h1t);letter-spacing:var(--h1l);margin:0;text-wrap:balance}
+h1 .w{color:var(--accent)}
+.lede{font-size:18px;color:var(--muted);max-width:50ch;margin:18px 0 0}
+.lede b{color:var(--ink);font-weight:600}
+.field{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:9px}
+@media (max-width:520px){.field{grid-template-columns:repeat(7,minmax(0,1fr))}}
+.field a{display:block;border-radius:4px}
+@media (prefers-reduced-motion:no-preference){.field a{transition:transform .2s}.field a:hover{transform:scale(1.15)}}
+.key{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:24px}
+@media (max-width:700px){.key{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.key div{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);min-width:0}
+.key .aura{width:34px}
+.key b{display:block;color:var(--ink);font-weight:600}
+.hues{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font:500 12px var(--f-data);color:var(--muted)}
+.hues span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:-1px;box-shadow:0 0 0 1px var(--edge)}
+.section{padding-block:44px 8px}
+h2{font:var(--h1w) 30px/1 var(--f-display);font-stretch:var(--h1s);text-transform:var(--h1t);letter-spacing:var(--h1l);margin:0 0 16px}
+.list{display:grid;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:46px minmax(0,1.2fr) minmax(0,1fr) minmax(0,1.3fr) minmax(150px,auto);gap:16px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+@media (max-width:860px){.row{grid-template-columns:46px minmax(0,1fr)}.row>:nth-child(n+3){grid-column:2}}
+.row:hover{background:var(--panel)}
+.row b{font:650 16px var(--f-body)}
+.row small{display:block;font:400 12px var(--f-data);color:var(--muted)}
+.lim{font:500 13px var(--f-data);font-variant-numeric:tabular-nums}
+.flags{display:flex;gap:5px;flex-wrap:wrap}
+.f{font:500 12px var(--f-body);padding:2px 9px;border-radius:var(--radius);border:1.5px solid currentColor;white-space:nowrap}
+.f.y{color:var(--ok)} .f.n{color:var(--bad)} .f.u{color:var(--unk);border-style:dashed}
+.sealcell{display:flex;justify-content:flex-start}
+.pp{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:32px;--surf:var(--panel)}
+@media (max-width:860px){.pp{grid-template-columns:1fr;padding:22px}}
+.pp .big{width:min(300px,100%);margin:auto}
+.pp .top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.pp h3{font:var(--h1w) 64px/.9 var(--f-display);font-stretch:var(--h1s);text-transform:var(--h1t);letter-spacing:var(--h1l);margin:0}
+.pp .sub{color:var(--muted);margin:8px 0 0}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.nums b{display:block;font:800 36px/1 var(--f-display);font-stretch:72%;font-variant-numeric:tabular-nums}
+.nums span{font:500 12px var(--f-data);color:var(--muted)}
+.read{font:500 13px var(--f-data);color:var(--muted);margin:14px 0 0}
+blockquote{margin:16px 0 0;font:450 18px/1.45 var(--f-body);padding-left:14px;border-left:3px solid var(--h-text)}
+blockquote cite{display:block;margin-top:6px;font:400 12px var(--f-data);color:var(--muted);font-style:normal}
+.btn{display:inline-block;margin-top:18px;font:600 15px var(--f-body);background:var(--accent);color:var(--on-accent);border-radius:var(--radius);padding:11px 20px;text-decoration:none}
+.spec{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+@media (max-width:760px){.spec{grid-template-columns:1fr}}
+.spec h4{font:600 13px var(--f-data);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.spec p{margin:0 0 10px;max-width:60ch}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.sw div{font:500 11px/1.3 var(--f-data);color:var(--muted)}
+.sw i{display:block;height:34px;border-radius:4px;margin-bottom:4px;background:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
+footer{padding-block:48px;color:var(--muted);font-size:13px}
+ .seal{display:inline-flex;align-items:stretch;font:500 12px var(--f-data);color:var(--accent);background:var(--seal-bg);white-space:nowrap;transform:rotate(-1.5deg);border-radius:4px;font-variant-numeric:tabular-nums;
+ -webkit-mask:radial-gradient(circle at 0 50%,transparent 5px,#000 5.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 5px,#000 5.5px) right/51% 100% no-repeat;
+ mask:radial-gradient(circle at 0 50%,transparent 5px,#000 5.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 5px,#000 5.5px) right/51% 100% no-repeat}
+ .seal b{padding:4px 7px 4px 11px;border-right:1.5px dashed var(--accent)}
+ .seal span{padding:4px 12px 4px 8px}
+ .seal.big{font-size:14px}
+ .seal.big b{padding:8px 10px 8px 16px;font-size:16px}
+ .seal.big span{padding:8px 18px 8px 11px}
+
+</style>
+
+<div class="wrap note"><span>H1-e · Cálida · variant of H1 Fingerprint + Receipts · auras computed from repo data v2.14.2 (73 providers, main @ 2026-11-25). Not the live site.</span><span>Aura: Barras radiales · Seal: Ticket troquelado</span></div>
+<header><div class="wrap bar">
+  <a class="brand" href="#top" aria-label="Free LLM API Hub home"><span class="aura" id="logo" aria-hidden="true"></span>Free LLM API Hub</a>
+  <nav aria-label="Main"><a href="#explore">Providers</a><a href="#explore">Models</a><a href="#explore">Compare</a><a href="#provider">Changes</a><a href="#spec">API</a></nav>
+  <div class="tools"><button class="pillbtn" id="theme" type="button" aria-label="Switch colour theme">Theme: system</button><a class="pillbtn" href="https://github.com/pacocartones/free-llm-api-hub">★ GitHub</a></div>
+</div></header>
+
+<main id="top" class="wrap">
+<section class="hero">
+  <div>
+    <h1>We read the docs. <span class="w">You ship the code.</span></h1>
+    <p class="lede"><b>73 free AI APIs</b>, each one drawn from its own data: a colour for every modality it serves, a closed shape if the free tier keeps going, an open one if it's a trial, a dashed mark when the docs leave something unsaid.</p>
+    <div class="key" id="key"></div>
+    <div class="hues" id="hues"></div>
+  </div>
+  <div class="field" id="field" aria-label="73 providers as generated auras"></div>
+</section>
+
+<section class="section" id="explore" aria-labelledby="exh">
+  <h2 id="exh">Providers</h2>
+  <div class="list" id="list"></div>
+</section>
+
+<section class="section" id="provider" aria-labelledby="pph">
+  <h2 id="pph">Provider page</h2>
+  <article class="pp">
+    <span class="aura big" id="groqbig" role="img" aria-label="Groq aura: text and audio, ongoing, 2 of 4 flags not stated"></span>
+    <div>
+      <div class="top" id="bigseal"></div>
+      <h3>Groq</h3>
+      <p class="sub">Lowest-latency inference for open-weight models · ongoing · OpenAI-compatible</p>
+      <div class="nums"><div><b>30</b><span>requests/min</span></div><div><b>1,000</b><span>requests/day</span></div><div><b>200K</b><span>tokens/day</span></div></div>
+      <div class="flags" id="gflags"></div>
+      <blockquote>“By default, Groq does not retain customer data for inference requests.”<cite>console.groq.com/docs/your-data · checked 24 Nov 2026</cite></blockquote>
+      <p class="read">How to read this aura: each colour sector is one modality · rays from the centre = ongoing · outer crown only = trial · dashed circle = flags not stated.</p>
+      <a class="btn" href="https://console.groq.com/docs/quickstart">Get a free key ↗</a>
+    </div>
+  </article>
+</section>
+
+<section class="section" id="spec" aria-labelledby="sph">
+  <h2 id="sph">Variant spec</h2>
+  <div class="spec">
+    <div><h4>Palette · this theme</h4><div class="sw" id="sw"></div></div>
+    <div><h4>Aura · Barras radiales</h4><p>40 barras en abanico, un sector de color por modalidad; el largo de cada barra sale del slug. Continuo: las barras nacen del centro (sol). Trial: solo una corona exterior. No consta: círculo exterior discontinuo.</p><h4>Seal · Ticket troquelado</h4><p>Ticket con muescas troqueladas a los lados y línea de corte entre el ✓ y el texto, fondo albaricoque.</p></div>
+  </div>
+</section>
+</main>
+<footer class="wrap">Typefaces: Roboto Flex and DM Mono (SIL OFL 1.1). Auras are drawn in the browser from the dataset; the shape seed comes from each provider's slug. Use the Theme button to see light and dark.</footer>
+<script>
+const P=[{"n":"Google Gemini API (AI Studio)","s":"google-gemini","o":1,"m":["text","vision","embeddings","audio"],"a":12,"u":1,"k":3},{"n":"Groq","s":"groq","o":1,"m":["text","audio"],"a":2,"u":2,"k":5},{"n":"OpenRouter","s":"openrouter","o":1,"m":["text","vision"],"a":2,"u":4,"k":6},{"n":"Cloudflare Workers AI","s":"cloudflare-workers-ai","o":1,"m":["text","embeddings","image","audio"],"a":2,"u":2,"k":5},{"n":"Cohere","s":"cohere","o":1,"m":["text","embeddings","rerank"],"a":2,"u":1,"k":6},{"n":"Cerebras","s":"cerebras","o":0,"m":["text"],"a":2,"u":1,"k":2},{"n":"HuggingFace","s":"huggingface","o":1,"m":["text","image","audio","embeddings"],"a":7,"u":2,"k":0},{"n":"SiliconFlow","s":"siliconflow","o":1,"m":["text","embeddings"],"a":1,"u":1,"k":4},{"n":"Z.ai (Zhipu AI / GLM)","s":"zai-glm","o":1,"m":["text","vision"],"a":7,"u":0,"k":3},{"n":"IBM watsonx.ai (Lite plan)","s":"ibm-watsonx","o":1,"m":["text"],"a":7,"u":2,"k":4},{"n":"OVHcloud AI Endpoints","s":"ovhcloud-ai-endpoints","o":1,"m":["text","image","audio"],"a":12,"u":1,"k":7},{"n":"Fireworks AI","s":"fireworks-ai","o":0,"m":["text"],"a":7,"u":2,"k":5},{"n":"Baseten","s":"baseten","o":0,"m":["text"],"a":1,"u":3,"k":4},{"n":"Novita AI","s":"novita","o":0,"m":["text"],"a":6,"u":1,"k":0},{"n":"AI21 Labs","s":"ai21","o":0,"m":["text"],"a":6,"u":1,"k":2},{"n":"NLP Cloud","s":"nlpcloud","o":0,"m":["text"],"a":6,"u":1,"k":0},{"n":"Alibaba Cloud (Model Studio)","s":"alibaba-model-studio","o":0,"m":["text"],"a":4,"u":1,"k":4},{"n":"Modal","s":"modal","o":1,"m":["text"],"a":2,"u":2,"k":0},{"n":"SambaNova Cloud","s":"sambanova","o":1,"m":["text"],"a":2,"u":3,"k":2},{"n":"Scaleway Generative APIs","s":"scaleway","o":0,"m":["text","audio"],"a":6,"u":2,"k":6},{"n":"NVIDIA NIM","s":"nvidia-nim","o":0,"m":["text"],"a":6,"u":2,"k":8},{"n":"Vercel AI Gateway","s":"vercel-ai-gateway","o":1,"m":["text"],"a":7,"u":3,"k":8},{"n":"Jina AI","s":"jina-ai","o":0,"m":["text","image","embeddings","rerank"],"a":6,"u":0,"k":0},{"n":"Deepgram","s":"deepgram","o":0,"m":["audio"],"a":6,"u":0,"k":0},{"n":"AssemblyAI","s":"assemblyai","o":0,"m":["audio"],"a":6,"u":0,"k":0},{"n":"Mixedbread","s":"mixedbread","o":0,"m":["text","embeddings","rerank","image"],"a":7,"u":1,"k":0},{"n":"AI Horde","s":"ai-horde","o":1,"m":["text","image"],"a":1,"u":1,"k":4},{"n":"ModelScope (API-Inference)","s":"modelscope","o":1,"m":["text","vision"],"a":6,"u":1,"k":8},{"n":"Pollinations.ai","s":"pollinations","o":0,"m":["image","text","audio"],"a":6,"u":1,"k":8},{"n":"Runware","s":"runware","o":0,"m":["image"],"a":6,"u":0,"k":0},{"n":"Pinecone Inference","s":"pinecone-inference","o":1,"m":["embeddings","rerank"],"a":2,"u":3,"k":4},{"n":"Twelve Labs (Marengo Embed)","s":"twelve-labs","o":1,"m":["embeddings","vision","audio","text"],"a":6,"u":3,"k":0},{"n":"OCR.space","s":"ocr-space","o":1,"m":["ocr","text"],"a":7,"u":1,"k":0},{"n":"LlamaParse (LlamaCloud)","s":"llamaparse","o":1,"m":["ocr","text"],"a":7,"u":0,"k":0},{"n":"Nanonets","s":"nanonets","o":0,"m":["ocr","text"],"a":7,"u":1,"k":0},{"n":"Moondream Cloud","s":"moondream","o":1,"m":["vision"],"a":2,"u":2,"k":0},{"n":"Speechmatics","s":"speechmatics","o":0,"m":["audio"],"a":6,"u":1,"k":0},{"n":"Speechify API","s":"speechify","o":1,"m":["audio"],"a":6,"u":1,"k":0},{"n":"Unreal Speech","s":"unreal-speech","o":1,"m":["audio"],"a":6,"u":2,"k":0},{"n":"ElevenLabs","s":"elevenlabs","o":1,"m":["audio"],"a":7,"u":0,"k":0},{"n":"Sarvam AI","s":"sarvam-ai","o":0,"m":["text","vision","audio"],"a":7,"u":3,"k":5},{"n":"Gladia","s":"gladia","o":0,"m":["audio"],"a":7,"u":3,"k":0},{"n":"Rime","s":"rime","o":1,"m":["audio"],"a":7,"u":3,"k":0},{"n":"Tencent Hunyuan","s":"tencent-hunyuan","o":0,"m":["text","vision","embeddings"],"a":2,"u":2,"k":4},{"n":"Voyage AI","s":"voyage-ai","o":0,"m":["text","image","embeddings","rerank"],"a":6,"u":2,"k":0},{"n":"Contextual AI","s":"contextual-ai","o":0,"m":["text","rerank"],"a":6,"u":2,"k":0},{"n":"Cartesia","s":"cartesia","o":1,"m":["audio"],"a":7,"u":1,"k":0},{"n":"Fish Audio","s":"fish-audio","o":1,"m":["audio"],"a":6,"u":2,"k":0},{"n":"Camb.ai","s":"camb-ai","o":0,"m":["audio"],"a":1,"u":4,"k":0},{"n":"Rev AI","s":"rev-ai","o":0,"m":["audio"],"a":7,"u":3,"k":0},{"n":"Unstructured","s":"unstructured","o":0,"m":["ocr"],"a":6,"u":3,"k":0},{"n":"Nutrient (Data Extraction API)","s":"nutrient","o":1,"m":["ocr"],"a":7,"u":2,"k":0},{"n":"Photoroom","s":"photoroom","o":1,"m":["image"],"a":7,"u":1,"k":0},{"n":"Poolside","s":"poolside","o":0,"m":["text"],"a":999,"u":2,"k":0},{"n":"Upstage","s":"upstage","o":0,"m":["text","ocr","embeddings"],"a":7,"u":2,"k":0},{"n":"Veryfi","s":"veryfi","o":1,"m":["ocr"],"a":7,"u":1,"k":0},{"n":"Voicegain","s":"voicegain","o":0,"m":["audio"],"a":6,"u":3,"k":0},{"n":"Smallest.ai (Waves)","s":"smallest-ai","o":0,"m":["audio"],"a":7,"u":2,"k":0},{"n":"Retell AI","s":"retell-ai","o":0,"m":["audio"],"a":6,"u":2,"k":0},{"n":"Datalab (Marker / Surya)","s":"datalab","o":0,"m":["ocr"],"a":2,"u":3,"k":0},{"n":"W&B Inference","s":"wandb-inference","o":0,"m":["text","vision"],"a":6,"u":1,"k":10},{"n":"Typhoon (SCB 10X)","s":"typhoon","o":1,"m":["text","audio"],"a":7,"u":0,"k":8},{"n":"Regolo.ai","s":"regolo","o":0,"m":["text"],"a":2,"u":2,"k":8},{"n":"Google Gemini Enterprise Agent Platform (express mode)","s":"google-agent-platform-express","o":0,"m":["text","image"],"a":2,"u":2,"k":8},{"n":"Inception (Mercury)","s":"inception","o":0,"m":["text"],"a":1,"u":2,"k":4},{"n":"Aion Labs","s":"aion-labs","o":1,"m":["text"],"a":1,"u":1,"k":5},{"n":"MegaNova AI","s":"meganova","o":1,"m":["text","embeddings","rerank"],"a":1,"u":3,"k":8},{"n":"SEA-LION API (AI Singapore)","s":"sea-lion","o":1,"m":["text","embeddings"],"a":1,"u":3,"k":4},{"n":"Azure Speech in Foundry Tools (Free F0)","s":"azure-speech","o":1,"m":["audio"],"a":1,"u":2,"k":0},{"n":"Lemonfox.ai","s":"lemonfox","o":0,"m":["text","audio","image"],"a":1,"u":4,"k":3},{"n":"Bytez","s":"bytez","o":1,"m":["text","vision","audio","image","embeddings"],"a":1,"u":4,"k":3},{"n":"Liquid AI","s":"liquid-ai","o":0,"m":["text","vision","audio"],"a":1,"u":2,"k":2},{"n":"Public AI Inference Utility","s":"public-ai","o":0,"m":["text"],"a":1,"u":4,"k":4}];
+const ROWS=[{"s":"groq","n":"Groq","k":"ongoing · text, audio","l":"30 RPM · 1K RPD · 200K TPD","f":["y:No card","u:Phone","u:Commercial","y:No training"],"a":2},{"s":"google-gemini","n":"Google Gemini API","k":"ongoing · text, vision, embeddings, audio","l":"Limits per model, shown in AI Studio","f":["y:No card","u:Phone","y:Commercial OK","n:Trains on prompts"],"a":12},{"s":"openrouter","n":"OpenRouter","k":"ongoing · text, vision","l":"20 RPM · 50 RPD","f":["u:Card","u:Phone","u:Commercial","u:Training"],"a":2},{"s":"cloudflare-workers-ai","n":"Cloudflare Workers AI","k":"ongoing · text, embeddings, image, audio","l":"300 RPM · 10K Neurons/day","f":["y:No card","u:Phone","u:Commercial","y:No training"],"a":2},{"s":"cerebras","n":"Cerebras","k":"trial · text","l":"$5 credit · trial","f":["n:Card required","u:Phone","y:Commercial OK","y:No training"],"a":2}];
+const GF=["y:No card", "u:Phone", "u:Commercial", "y:No training"];
+
+function rngOf(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}return function(){h=Math.imul(h^(h>>>16),2246822507);h=Math.imul(h^(h>>>13),3266489909);h^=h>>>16;return (h>>>0)/4294967296}}
+const HV=m=>'var(--h-'+m+')';
+let UID=0;
+const f1=x=>x.toFixed(1);
+const SVG=g=>'<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">'+g+'</svg>';
+const DASH=(r)=>'<circle cx="50" cy="50" r="'+r+'" fill="none" stroke-width="2.2" stroke-dasharray="4 3" style="stroke:var(--unk)"/>';
+
+const AURA=function(p){const r=rngOf(p.s),N=40,n=p.m.length,r0=p.o?9:27,max=p.o?37:18,rot=r()*Math.PI*2;let g='';
+for(let i=0;i<N;i++){const m=p.m[Math.floor(i*n/N)],a=i/N*Math.PI*2+rot,len=max*(0.45+r()*0.55),c=Math.cos(a),s=Math.sin(a);
+ g+='<line x1="'+f1(50+r0*c)+'" y1="'+f1(50+r0*s)+'" x2="'+f1(50+(r0+len)*c)+'" y2="'+f1(50+(r0+len)*s)+'" stroke-width="'+(p.o?3.3:3)+'" stroke-linecap="round" style="stroke:'+HV(m)+'"/>'}
+if(p.u)g+=DASH(48.4);return SVG(g)};
+const SEAL=function(o){return '<span class="seal'+(o.big?' big':'')+'"><b aria-hidden="true">✓</b><span>Verified '+(o.big?o.date+' · '+o.src:o.age+' ago · source')+'</span></span>'};
+function mk(p,cls){const s=document.createElement('span');s.className='aura'+(p.a>30?' old':'')+(cls?' '+cls:'');s.innerHTML=AURA(p);return s}
+const field=document.getElementById('field');
+P.forEach(p=>{const a=document.createElement('a');a.href='#provider';a.setAttribute('aria-label',p.n);a.title=p.n+' · '+p.m.join(', ')+(p.o?' · ongoing':' · trial');a.appendChild(mk(p));field.appendChild(a)});
+document.getElementById('logo').innerHTML=AURA({s:'free-llm-api-hub',o:1,m:['text','vision','audio','embeddings','image','ocr'],a:0,u:0,k:6});
+const G=P.find(p=>p.s==='groq');document.getElementById('groqbig').innerHTML=AURA(G);
+document.getElementById('bigseal').innerHTML=SEAL({big:true,date:'24 Nov 2026',short:'24 NOV 2026',src:'7 sources',age:'2d'});
+const K=[['Ongoing','closed shape',{s:'key-a',o:1,m:['text','audio','image'],a:1,u:0,k:4}],['Trial','open shape',{s:'key-a',o:0,m:['text','audio','image'],a:1,u:0,k:4}],['Not stated','dashed mark',{s:'key-a',o:1,m:['text','audio','image'],a:1,u:2,k:4}],['Over 30 days','faded',{s:'key-a',o:1,m:['text','audio','image'],a:40,u:0,k:4}]];
+const key=document.getElementById('key');
+K.forEach(([t,s,p])=>{const d=document.createElement('div');d.appendChild(mk(p));d.insertAdjacentHTML('beforeend','<span><b>'+t+'</b>'+s+'</span>');key.appendChild(d)});
+const LBL={text:'text',vision:'vision',audio:'audio',embeddings:'embeddings',image:'image',ocr:'OCR/docs',rerank:'rerank'};
+document.getElementById('hues').innerHTML=Object.keys(LBL).map(k=>'<span style="--c:var(--h-'+k+')">'+LBL[k]+'</span>').join('');
+const S={y:'✓',n:'✕',u:'?'};
+const fl=f=>f.map(x=>{const[s,t]=x.split(':');return '<span class="f '+s+'">'+S[s]+' '+t+(s==='u'?' not stated':'')+'</span>'}).join('');
+document.getElementById('gflags').innerHTML=fl(GF);
+const list=document.getElementById('list');
+ROWS.forEach(r=>{const a=document.createElement('a');a.className='row';a.href='#provider';a.appendChild(mk(P.find(p=>p.s===r.s)));
+ a.insertAdjacentHTML('beforeend','<div><b>'+r.n+'</b><small>'+r.k+'</small></div><div class="lim">'+r.l+'</div><div class="flags">'+fl(r.f)+'</div><div class="sealcell">'+SEAL({big:false,age:r.a+'d',date:'',src:''})+'</div>');list.appendChild(a)});
+const SW=['bg','panel','ink','muted','accent','ok','unk','bad','chg','h-text','h-vision','h-audio','h-embeddings','h-image','h-ocr','h-rerank'];
+function swatches(){const cs=getComputedStyle(document.documentElement);document.getElementById('sw').innerHTML=SW.map(t=>'<div><i style="--c:var(--'+t+')"></i>--'+t+'<br>'+cs.getPropertyValue('--'+t).trim()+'</div>').join('')}
+swatches();
+const tb=document.getElementById('theme'),modes=['system','light','dark'];let mi=0;
+tb.addEventListener('click',()=>{mi=(mi+1)%3;const m=modes[mi];if(m==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',m);tb.textContent='Theme: '+m;swatches()});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',swatches);
+</script>
