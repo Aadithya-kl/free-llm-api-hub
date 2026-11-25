@@ -1,0 +1,179 @@
+<title>Fingerprint Receipts prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: every provider gets a generative "aura" computed from its own data; the brand is the field of 64 auras plus breathing variable type. */
+:root{
+  --bg:#FAFAFA; --panel:#FFFFFF; --ink:#0F0F12; --muted:#55565E; --line:#E6E6EA; --control:#8A8B93;
+  --accent:#C2255C; --on-accent:#FFFFFF; --ok:#1B7A44; --unk:#8A5700; --bad:#C0262D; --chg:#3D5AFE;
+  --h-text:#7C5CFF; --h-vision:#00C2E0; --h-audio:#FFA31A; --h-embeddings:#2BC48A; --h-image:#FF4F8B; --h-ocr:#FF7A3D; --h-rerank:#4C8DFF;
+  --f-display:'Roboto Flex', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-body:'Roboto Flex', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-data:'DM Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0E11; --panel:#18181D; --ink:#F3F3F5; --muted:#A6A7B0; --line:#2A2A31; --control:#64656E;
+  --accent:#FF6B9A; --on-accent:#0E0E11; --ok:#4FD08A; --unk:#F0BA4E; --bad:#FF7A7A; --chg:#8C9EFF; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0E0E11; --panel:#18181D; --ink:#F3F3F5; --muted:#A6A7B0; --line:#2A2A31; --control:#64656E;
+  --accent:#FF6B9A; --on-accent:#0E0E11; --ok:#4FD08A; --unk:#F0BA4E; --bad:#FF7A7A; --chg:#8C9EFF; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:12px}
+.note{font:12px var(--f-data);color:var(--muted);padding-block:10px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:650 16px var(--f-display);font-stretch:112%;white-space:nowrap}
+.brand .aura{width:28px;height:28px}
+nav{display:flex;gap:4px;min-width:0;overflow-x:auto}
+nav a{color:var(--muted);text-decoration:none;font:500 14px var(--f-body);padding:6px 10px;border-radius:999px;white-space:nowrap}
+nav a:hover{color:var(--ink);background:var(--line)}
+.star{margin-left:auto;font:500 13px var(--f-data);color:var(--ink);border:1px solid var(--control);border-radius:999px;padding:5px 12px;text-decoration:none;white-space:nowrap}
+@media (max-width:760px){nav{display:none}}
+.aura{display:block;border-radius:50%;aspect-ratio:1;max-width:100%;position:relative;background:var(--g)}
+.aura::after{content:"";position:absolute;inset:var(--hole);border-radius:50%;background:var(--bg)}
+.aura.dash{outline:2px dashed var(--unk);outline-offset:3px}
+.aura.old{filter:saturate(.25)}
+.hero{padding-block:52px 18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+h1{font:800 clamp(42px,6.4vw,88px)/.92 var(--f-display);font-stretch:80%;letter-spacing:-.03em;margin:0;text-wrap:balance}
+h1 .w{display:inline-block;color:var(--accent);font-variation-settings:"wdth" 80,"wght" 800}
+@media (prefers-reduced-motion:no-preference){h1 .w{animation:breathe 5s ease-in-out infinite}@keyframes breathe{50%{font-variation-settings:"wdth" 130,"wght" 300}}}
+.lede{font-size:18px;color:var(--muted);max-width:48ch;margin:18px 0 0}
+.field{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.field{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.field a{display:block;border-radius:50%}
+@media (prefers-reduced-motion:no-preference){.field a{transition:transform .2s}.field a:hover{transform:scale(1.15)}}
+.key{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+@media (max-width:700px){.key{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.key div{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.key .aura{width:30px;flex:none}
+.key b{display:block;color:var(--ink);font-weight:600}
+.hues{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font:500 12px var(--f-data);color:var(--muted)}
+.hues span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:6px}
+.section{padding-block:44px 8px}
+h2{font:750 30px/1 var(--f-display);font-stretch:85%;letter-spacing:-.02em;margin:0 0 16px}
+.list{display:grid;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:44px minmax(0,1.2fr) minmax(0,1fr) minmax(0,1.3fr) auto;gap:16px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+@media (max-width:820px){.row{grid-template-columns:44px minmax(0,1fr)}.row .lim,.row .flags,.row .age{grid-column:2}}
+.row:hover{background:var(--panel)}
+.row b{font:650 16px var(--f-body)}
+.row small{display:block;font:400 12px var(--f-data);color:var(--muted)}
+.lim{font:500 13px var(--f-data);font-variant-numeric:tabular-nums}
+.flags{display:flex;gap:5px;flex-wrap:wrap}
+.f{font:500 12px var(--f-body);padding:2px 9px;border-radius:999px;border:1.5px solid currentColor}
+.f.y{color:var(--ok)} .f.n{color:var(--bad)} .f.u{color:var(--unk);border-style:dashed}
+.age{font:500 12px var(--f-data);color:var(--ok);white-space:nowrap}
+/* The receipt seal from A: the brand's signature for "how we know". */
+.seal{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--f-data);color:var(--accent);border:1.5px solid var(--accent);border-radius:5px;padding:2px 8px;transform:rotate(-2deg);white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:no-preference){.seal{transition:transform .2s}.seal:hover{transform:rotate(0) scale(1.05)}}
+.pp{position:relative;border-radius:28px 28px 0 0 !important}
+.pp::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:radial-gradient(circle at 7px -3px,transparent 7px,var(--panel) 7.5px) 0 0/14px 10px repeat-x}
+.pp .seal.big-seal{font-size:14px;padding:5px 12px;margin-bottom:12px}
+.pp{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:32px}
+@media (max-width:860px){.pp{grid-template-columns:1fr;padding:22px}}
+.pp .big{width:min(320px,100%);margin:auto}
+.pp .big::after{background:var(--panel)}
+.pp h3{font:800 64px/.9 var(--f-display);font-stretch:75%;letter-spacing:-.03em;margin:0}
+.pp .sub{color:var(--muted);margin:8px 0 0}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.nums b{display:block;font:800 36px/1 var(--f-display);font-stretch:70%;font-variant-numeric:tabular-nums}
+.nums span{font:500 12px var(--f-data);color:var(--muted)}
+.read{font:500 13px var(--f-data);color:var(--muted);margin:14px 0 0}
+blockquote{margin:16px 0 0;font:450 18px/1.45 var(--f-body);padding-left:14px;border-left:3px solid var(--h-text)}
+blockquote cite{display:block;margin-top:6px;font:400 12px var(--f-data);color:var(--muted);font-style:normal}
+.btn{display:inline-block;margin-top:18px;font:600 15px var(--f-body);background:var(--accent);color:var(--on-accent);border-radius:999px;padding:11px 20px;text-decoration:none}
+.og{aspect-ratio:1200/630;max-width:100%;border-radius:18px;overflow:hidden;background:#0E0E11;color:#F3F3F5;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;padding:5%;gap:5%}
+.og b{font:800 clamp(18px,3.8vw,46px)/.95 'Roboto Flex',sans-serif;font-stretch:75%}
+.og span{display:block;font:500 clamp(9px,1.2vw,14px) 'DM Mono',monospace;color:#A6A7B0;margin-top:5%}
+.og .aura::after{background:#0E0E11}
+.ogs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.ogs{grid-template-columns:1fr}}
+footer{padding-block:48px;color:var(--muted);font-size:13px}
+</style>
+
+<div class="wrap note">Hybrid H1 · Fingerprint (G) + Receipts (A) · quick prototype · auras computed from repo snapshot v2.14.2 (2026-11-24). Not the live site.</div>
+<header><div class="wrap bar">
+  <a class="brand" href="#top" aria-label="Free LLM API Hub home"><span class="aura" id="logo" aria-hidden="true"></span>Free LLM API Hub</a>
+  <nav aria-label="Main"><a href="#explore">Providers</a><a href="#explore">Models</a><a href="#explore">Compare</a><a href="#provider">Changes</a><a href="#og">API</a></nav>
+  <a class="star" href="https://github.com/pacocartones/free-llm-api-hub">★ 129</a>
+</div></header>
+
+<main id="top" class="wrap">
+<section class="hero">
+  <div>
+    <h1>Every limit quoted. <span class="w">Every quote dated.</span></h1>
+    <p class="lede">64 free AI APIs. Each circle is one provider, drawn from its own data: colours for what it can do, a full disc if the free tier keeps going, a ring if it's a trial, a dashed edge when the docs leave something unsaid.</p>
+    <div class="key" id="key"></div>
+    <div class="hues" id="hues"></div>
+  </div>
+  <div class="field" id="field" aria-label="64 providers as generated auras"></div>
+</section>
+
+<section class="section" id="explore" aria-labelledby="exh">
+  <h2 id="exh">Providers</h2>
+  <div class="list" id="list"></div>
+</section>
+
+<section class="section" id="provider" aria-labelledby="pph">
+  <h2 id="pph">Provider page</h2>
+  <article class="pp">
+    <span class="aura big" id="groqbig" role="img" aria-label="Groq aura: text and audio, ongoing, two flags not stated"></span>
+    <div>
+      <span class="seal big-seal">✓ Verified 24 Nov 2026 · 3 sources</span>
+      <h3>Groq</h3>
+      <p class="sub">Lowest-latency inference for open-weight models · ongoing · OpenAI-compatible</p>
+      <div class="nums"><div><b>30</b><span>requests/min</span></div><div><b>1,000</b><span>requests/day</span></div><div><b>200K</b><span>tokens/day</span></div></div>
+      <div class="flags"><span class="f y">✓ No card</span><span class="f u">? Phone not stated</span><span class="f u">? Commercial not stated</span><span class="f y">✓ No training</span></div>
+      <blockquote>“By default, Groq does not retain customer data for inference requests.”<cite>console.groq.com/docs/your-data · checked 24 Nov 2026</cite></blockquote>
+      <p class="read">How to read this aura: violet = text, amber = audio · full disc = ongoing · dashed edge = 2 of 4 flags not stated.</p>
+      <a class="btn" href="https://console.groq.com/docs/quickstart">Get a free key ↗</a>
+    </div>
+  </article>
+</section>
+
+<section class="section" id="og" aria-labelledby="ogh">
+  <h2 id="ogh">Social cards</h2>
+  <div class="ogs">
+    <div class="og" role="img" aria-label="Home social card"><div><b>Every limit quoted. Every quote dated.</b><span>64 free AI APIs · freellmapihub.com</span></div><div class="field" id="ogfield" style="grid-template-columns:repeat(4,1fr);gap:6px"></div></div>
+    <div class="og" role="img" aria-label="Groq social card"><div><b>Groq<br>30 RPM · 1K RPD</b><span>verified 24 Nov 2026 · no card</span></div><span class="aura" id="groqog" style="width:80%;margin:auto"></span></div>
+  </div>
+</section>
+</main>
+<footer class="wrap">Typefaces: Roboto Flex and DM Mono (SIL OFL 1.1). Auras generated in the browser from the dataset; seal from direction A.</footer>
+<script>
+const D=[["Google Gemini API",1,"text,vision,embeddings,audio",11,0],["Groq",1,"text,audio",1,2],["OpenRouter",1,"text,vision",1,4],["Cloudflare Workers AI",1,"text,embeddings,image,audio",1,2],["Cohere",1,"text,embeddings,rerank",1,2],["Cerebras",0,"text",1,1],["HuggingFace",1,"text,image,audio,embeddings",6,2],["SiliconFlow",1,"text,embeddings",11,1],["Z.ai",1,"text,vision",6,0],["IBM watsonx.ai",1,"text",6,2],["OVHcloud AI Endpoints",1,"text,image,audio",11,1],["Fireworks AI",0,"text",6,2],["Baseten",0,"text",6,3],["Novita AI",0,"text",5,1],["AI21 Labs",0,"text",5,1],["NLP Cloud",0,"text",5,1],["Alibaba Cloud",0,"text",3,2],["Modal",1,"text",4,2],["SambaNova Cloud",1,"text",1,3],["Scaleway Generative APIs",0,"text,audio",5,2],["NVIDIA NIM",0,"text",5,2],["Vercel AI Gateway",1,"text",6,3],["Jina AI",0,"text,image,embeddings,rerank",5,0],["Deepgram",0,"audio",5,0],["AssemblyAI",0,"audio",5,0],["Mixedbread",0,"text,embeddings,rerank,image",6,1],["AI Horde",1,"text,image",11,1],["ModelScope",1,"text,vision",5,2],["Pollinations.ai",0,"image,text,audio",5,1],["Runware",0,"image",5,0],["Pinecone Inference",1,"embeddings,rerank",1,3],["Twelve Labs",1,"embeddings,vision,audio,text",5,3],["OCR.space",1,"ocr,text",6,1],["LlamaParse",1,"ocr,text",6,0],["Nanonets",0,"ocr,text",6,1],["Moondream Cloud",1,"vision",40,2],["Speechmatics",0,"audio",5,1],["Speechify API",1,"audio",5,1],["Unreal Speech",1,"audio",5,2],["ElevenLabs",1,"audio",6,0],["Sarvam AI",0,"text,vision,audio",6,3],["Gladia",0,"audio",6,3],["Rime",1,"audio",6,3],["Tencent Hunyuan",0,"text,vision,embeddings",1,2],["Voyage AI",0,"text,image,embeddings,rerank",5,2],["Contextual AI",0,"text,rerank",5,2],["Cartesia",1,"audio",6,1],["Fish Audio",1,"audio",5,2],["Camb.ai",0,"audio",6,4],["Rev AI",0,"audio",6,3],["Unstructured",0,"ocr",5,3],["Nutrient",1,"ocr",6,2],["Photoroom",1,"image",6,2],["Poolside",0,"text",20782,2],["Upstage",0,"text,ocr,embeddings",6,2],["Veryfi",1,"ocr",6,1],["Voicegain",0,"audio",5,3],["Smallest.ai",0,"audio",6,2],["Retell AI",0,"audio",5,2],["Datalab",0,"ocr",1,3],["W&B Inference",0,"text,vision",5,1],["Typhoon",1,"text,audio",6,0],["Regolo.ai",0,"text",1,2],["Google Gemini Enterprise Agent Platform",0,"text,image",1,2]];
+const HUE={text:'var(--h-text)',vision:'var(--h-vision)',audio:'var(--h-audio)',embeddings:'var(--h-embeddings)',image:'var(--h-image)',ocr:'var(--h-ocr)',rerank:'var(--h-rerank)'};
+// Aura: conic sectors per modality plus a soft light; ring = trial; dashed outline = unknown flags; faded = older than 30 days.
+function paint(el,p){
+  const ongoing=p[1],m=p[2].split(','),age=p[3],unk=p[4],step=100/m.length;
+  const conic='conic-gradient(from 210deg,'+m.map((x,i)=>HUE[x]+' '+(i*step)+'% '+((i+1)*step)+'%').join(',')+')';
+  el.style.setProperty('--g','radial-gradient(circle at 35% 30%,rgba(255,255,255,.55),transparent 45%),'+conic);
+  el.style.setProperty('--hole',ongoing?'50%':'24%');
+  if(unk) el.classList.add('dash');
+  if(age>30) el.classList.add('old');
+  return el;
+}
+const mk=p=>paint(Object.assign(document.createElement('span'),{className:'aura'}),p);
+const field=document.getElementById('field');
+D.forEach(p=>{const a=document.createElement('a');a.href='#provider';a.setAttribute('aria-label',p[0]);a.title=p[0]+' · '+p[2].replace(/,/g,', ');a.appendChild(mk(p));field.appendChild(a)});
+D.slice(0,16).forEach(p=>document.getElementById('ogfield').appendChild(mk(p)));
+paint(document.getElementById('logo'),['Hub',1,'text,vision,audio,embeddings,image,ocr',0,0]);
+paint(document.getElementById('groqbig'),D[1]);paint(document.getElementById('groqog'),D[1]);
+const K=[['Ongoing','full disc',['x',1,'text,audio',1,0]],['Trial','ring',['x',0,'text,audio',1,0]],['Not stated','dashed edge',['x',1,'text,audio',1,2]],['Over 30 days old','faded',['x',1,'text,audio',40,0]]];
+const key=document.getElementById('key');
+K.forEach(([t,s,p])=>{const d=document.createElement('div');d.appendChild(mk(p));d.insertAdjacentHTML('beforeend','<span><b>'+t+'</b>'+s+'</span>');key.appendChild(d)});
+document.getElementById('hues').innerHTML=Object.keys(HUE).map(k=>'<span style="--c:'+HUE[k]+'">'+k+'</span>').join('');
+const R=[['Groq','ongoing · text, audio','30 RPM · 1K RPD · 200K TPD',['y:No card','u:Phone','u:Commercial','y:No training'],'1d',1],
+['Google Gemini API','ongoing · text, vision, embeddings, audio','Limits per model',['y:No card','y:No phone','y:Commercial','n:Trains on prompts'],'11d',0],
+['OpenRouter','ongoing · text, vision','20 RPM · 50 RPD',['u:Card','u:Phone','u:Commercial','u:Training'],'1d',2],
+['Cloudflare Workers AI','ongoing · text, embeddings, image, audio','10,000 Neurons/day',['y:No card','u:Phone','u:Commercial','y:No training'],'1d',3],
+['Cerebras','trial · 30 days · text','$5 credit',['n:Card','u:Phone','y:Commercial','y:No training'],'1d',5]];
+const S={y:'✓',n:'✕',u:'?'};
+const list=document.getElementById('list');
+R.forEach(([n,k,l,f,age,i])=>{const a=document.createElement('a');a.className='row';a.href='#provider';a.appendChild(mk(D[i]));a.insertAdjacentHTML('beforeend','<div><b>'+n+'</b><small>'+k+'</small></div><div class="lim">'+l+'</div><div class="flags">'+f.map(x=>{const[s,t]=x.split(':');return '<span class="f '+s+'">'+S[s]+' '+t+'</span>'}).join('')+'</div><span class="seal">✓ '+age+' ago · source</span>');list.appendChild(a)});
+</script>

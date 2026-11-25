@@ -1,0 +1,287 @@
+<title>Receipts brand prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Martian+Mono:wdth,wght@87.5,400;87.5,500;87.5,700;100,800&display=swap">
+<style>
+/* Layout: left-aligned ledger. Paper surfaces, ink type, colour only where a "stamp" carries meaning. */
+:root{
+  --paper:#F6F6F3; --sheet:#FFFFFF; --ink:#16181C; --ink-2:#4D525B; --rule:#E2E2DC; --control:#8A8D93;
+  --stamp:#2D44D0; --on-stamp:#FFFFFF;
+  --ok:#0E7438; --unk:#8A5700; --bad:#B3261A; --chg:#6B3CC9; --trial:#0A6A75;
+  --m-text:#2D44D0; --m-vision:#0A6A75; --m-audio:#8A5700; --m-emb:#2F6F1C; --m-image:#AE2468; --m-docs:#8E4510;
+  --tint:6%;
+  --f-display:'Martian Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --f-body:'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-data:'Martian Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111214; --sheet:#191A1D; --ink:#EDEDE8; --ink-2:#A5A8AF; --rule:#2A2C31; --control:#6E727B;
+  --stamp:#94A3FF; --on-stamp:#111214;
+  --ok:#4FC77F; --unk:#E8B653; --bad:#FF8070; --chg:#BBA2FF; --trial:#55C8D4;
+  --m-text:#94A3FF; --m-vision:#55C8D4; --m-audio:#E8B653; --m-emb:#8FD46C; --m-image:#FF8CC0; --m-docs:#F5A06A;
+  --tint:14%; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#111214; --sheet:#191A1D; --ink:#EDEDE8; --ink-2:#A5A8AF; --rule:#2A2C31; --control:#6E727B;
+  --stamp:#94A3FF; --on-stamp:#111214;
+  --ok:#4FC77F; --unk:#E8B653; --bad:#FF8070; --chg:#BBA2FF; --trial:#55C8D4;
+  --m-text:#94A3FF; --m-vision:#55C8D4; --m-audio:#E8B653; --m-emb:#8FD46C; --m-image:#FF8CC0; --m-docs:#F5A06A;
+  --tint:14%; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--stamp)}
+:focus-visible{outline:2px solid var(--stamp);outline-offset:2px;border-radius:3px}
+.note{font:12px/1.4 var(--f-data);color:var(--ink-2);padding-block:10px;border-bottom:1px dashed var(--rule)}
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--ink)}
+.bar{display:flex;align-items:center;gap:20px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:700 14px var(--f-display);letter-spacing:-.02em;white-space:nowrap}
+.brand svg{width:28px;height:28px}
+nav{display:flex;gap:4px;overflow-x:auto;min-width:0}
+nav a{color:var(--ink-2);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:6px;white-space:nowrap}
+nav a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.gh{margin-left:auto;font:500 12px var(--f-data);border:1px solid var(--control);border-radius:6px;padding:5px 10px;color:var(--ink);text-decoration:none;white-space:nowrap}
+@media (max-width:760px){nav{display:none}}
+/* hero */
+.hero{padding-block:56px 28px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:end}
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:24px;padding-block:32px 20px}}
+.eyebrow{font:500 11px var(--f-data);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin:0 0 14px}
+h1{font:800 clamp(34px,5.6vw,60px)/1.02 var(--f-display);font-stretch:100%;letter-spacing:-.045em;margin:0;text-wrap:balance}
+h1 .rc{position:relative;white-space:nowrap}
+h1 .rc::after{content:"";position:absolute;left:-2px;right:-4px;bottom:.06em;height:.16em;background:var(--stamp);opacity:.85;transform:skewX(-12deg)}
+.lede{font-size:18px;color:var(--ink-2);max-width:56ch;margin:18px 0 0}
+.tape{font:400 12px/1.9 var(--f-data);background:var(--sheet);border:1px solid var(--rule);padding:16px 18px 20px;position:relative;font-variant-numeric:tabular-nums}
+.tape::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:radial-gradient(circle at 6px -2px,transparent 6px,var(--sheet) 6.5px) 0 0/12px 8px repeat-x}
+.tape .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--rule)}
+.tape .row b{font-weight:700}
+.tape .tot{border:0;margin-top:6px;font-weight:700}
+/* search */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:22px 12px}
+.search{flex:1 1 320px;min-width:0;display:flex;align-items:center;gap:8px;background:var(--sheet);border:1.5px solid var(--ink);border-radius:8px;padding:10px 12px}
+.search input{border:0;background:transparent;font:16px var(--f-body);color:var(--ink);width:100%;outline:none}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:8px;overflow:hidden}
+.seg button{font:600 13px var(--f-body);border:0;background:var(--sheet);color:var(--ink);padding:10px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:16px}
+.chip{font:500 13px var(--f-body);border:1px solid var(--control);background:transparent;color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--stamp);background:color-mix(in srgb,var(--stamp) var(--tint),transparent);color:var(--stamp)}
+/* table */
+.tscroll{overflow-x:auto;border-top:2px solid var(--ink)}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{font:500 11px var(--f-data);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule)}
+td{padding:14px 12px;border-bottom:1px solid var(--rule);vertical-align:top;font-size:14px}
+tr:hover td{background:color-mix(in srgb,var(--ink) 3%,transparent)}
+.pname{font:700 15px var(--f-body);color:var(--ink);text-decoration:none}
+.pname:hover{text-decoration:underline}
+.mods{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.mod{font:500 10.5px var(--f-data);padding:1px 6px;border-radius:3px;color:var(--c);background:color-mix(in srgb,var(--c) var(--tint),transparent)}
+.num{font:500 13px var(--f-data);font-variant-numeric:tabular-nums;white-space:nowrap}
+.num small{color:var(--ink-2);font-size:11px}
+.flags{display:flex;gap:4px;flex-wrap:wrap}
+.flag{display:inline-flex;align-items:center;gap:4px;font:500 11.5px var(--f-body);padding:2px 7px;border-radius:4px;border:1px solid currentColor;white-space:nowrap}
+.flag.y{color:var(--ok)} .flag.n{color:var(--bad)} .flag.u{color:var(--unk);border-style:dashed}
+.type{font:500 11px var(--f-data);text-transform:uppercase;letter-spacing:.06em}
+.type.on{color:var(--ok)} .type.tr{color:var(--trial)}
+/* the receipt seal: brand signature */
+.seal{display:inline-flex;align-items:center;gap:6px;font:500 11.5px var(--f-data);color:var(--stamp);border:1.5px solid var(--stamp);border-radius:4px;padding:2px 7px;transform:rotate(-1.5deg);white-space:nowrap;font-variant-numeric:tabular-nums}
+.seal.old{color:var(--unk);border-color:var(--unk)}
+/* provider page */
+h2{font:700 13px var(--f-data);letter-spacing:.1em;text-transform:uppercase;margin:0 0 14px;color:var(--ink-2)}
+.section{padding-block:56px 8px}
+.pp{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px}
+@media (max-width:860px){.pp{grid-template-columns:1fr}}
+.receipt{background:var(--sheet);border:1px solid var(--rule);padding:28px 26px 34px;position:relative}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:radial-gradient(circle at 6px -2px,transparent 6px,var(--sheet) 6.5px) 0 0/12px 8px repeat-x}
+.receipt h3{font:800 34px/1.05 var(--f-display);letter-spacing:-.04em;margin:0}
+.receipt .sub{color:var(--ink-2);margin:6px 0 18px}
+.limits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block:2px solid var(--ink);margin-block:18px}
+.limits div{padding:14px 10px}
+.limits div+div{border-left:1px dashed var(--rule)}
+.limits b{display:block;font:800 30px/1 var(--f-display);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.limits span{font:500 11px var(--f-data);color:var(--ink-2);text-transform:uppercase;letter-spacing:.08em}
+.lines{font:400 13px/1.9 var(--f-data)}
+.lines .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--rule)}
+.quote{margin:22px 0 0;padding:14px 16px;border-left:3px solid var(--stamp);background:color-mix(in srgb,var(--stamp) var(--tint),transparent);font-size:15px}
+.quote cite{display:block;font:500 11.5px var(--f-data);color:var(--ink-2);font-style:normal;margin-top:8px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.btn{font:600 14px var(--f-body);text-decoration:none;padding:10px 16px;border-radius:8px;border:1.5px solid var(--ink);color:var(--ink)}
+.btn.primary{background:var(--stamp);border-color:var(--stamp);color:var(--on-stamp)}
+.side{display:grid;gap:16px;align-content:start}
+.card{background:var(--sheet);border:1px solid var(--rule);padding:18px}
+pre{margin:0;background:var(--ink);color:var(--paper);padding:14px 16px;border-radius:8px;overflow-x:auto;font:400 12.5px/1.6 var(--f-data)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fitem{border:1px solid var(--rule);border-radius:6px;padding:10px}
+.fitem .k{font:500 11px var(--f-data);color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.fitem .v{font-weight:600;margin-top:4px;display:flex;align-items:center;gap:6px}
+.fitem.y .v{color:var(--ok)} .fitem.n .v{color:var(--bad)} .fitem.u .v{color:var(--unk)} .fitem.u{border-style:dashed}
+.change{font:400 12.5px var(--f-data);display:flex;gap:10px;align-items:baseline}
+.change b{color:var(--chg);font-weight:500}
+/* brand sheet */
+.sheetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.sw{border:1px solid var(--rule);background:var(--sheet);border-radius:6px;overflow:hidden;font:400 11.5px var(--f-data)}
+.sw i{display:block;height:44px;background:var(--c)}
+.sw div{padding:8px}
+.og{aspect-ratio:1200/630;max-width:100%;background:var(--sheet);border:1px solid var(--rule);padding:4.5%;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.og .t{font:800 clamp(18px,3.4vw,40px)/1.05 var(--f-display);letter-spacing:-.045em}
+.og .n{display:flex;gap:6%;font:800 clamp(14px,2.6vw,30px) var(--f-display);font-variant-numeric:tabular-nums}
+.og .n span{display:block;font:500 clamp(8px,1vw,12px) var(--f-data);color:var(--ink-2);letter-spacing:.08em}
+.og .seal{position:absolute;right:5%;top:8%;font-size:clamp(10px,1.4vw,16px);transform:rotate(-6deg);padding:6px 10px}
+.ogs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:700px){.ogs{grid-template-columns:1fr}}
+footer{padding-block:48px;color:var(--ink-2);font-size:13px}
+@media (prefers-reduced-motion:no-preference){.seal{transition:transform .2s}.seal:hover{transform:rotate(0) scale(1.04)}}
+</style>
+
+<div class="wrap note">Prototype A · "Receipts" · data: repo snapshot v2.14.2 (2026-11-24, 64 providers). Not the live site.</div>
+
+<header><div class="wrap bar">
+  <a class="brand" href="#top" aria-label="Free LLM API Hub home">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 3h18a2 2 0 0 1 2 2v24l-3.33-2-3.34 2-3.33-2-3.33 2-3.34-2L5 29V5a2 2 0 0 1 2-2z" fill="var(--ink)"/><path d="M10.5 15.5l4 4 7.5-8" fill="none" stroke="var(--paper)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Free LLM API Hub
+  </a>
+  <nav aria-label="Main"><a href="#explore">Providers</a><a href="#explore">Models</a><a href="#explore">Compare</a><a href="#provider">Changes</a><a href="#brand">API</a></nav>
+  <a class="gh" href="https://github.com/pacocartones/free-llm-api-hub">★ 129</a>
+</div></header>
+
+<main id="top">
+<section class="wrap hero">
+  <div>
+    <p class="eyebrow">Open dataset · MIT · no ads</p>
+    <h1>Free LLM APIs, with <span class="rc">receipts.</span></h1>
+    <p class="lede">64 free tiers and trial credits. Every limit is quoted from the provider's own docs, dated, and re-checked within 90 days. When a provider doesn't say, we say so.</p>
+  </div>
+  <div class="tape" aria-label="Dataset summary">
+    <div class="row"><span>Providers tracked</span><b>64</b></div>
+    <div class="row"><span>Ongoing free tiers</span><b>30</b></div>
+    <div class="row"><span>Trial credits</span><b>34</b></div>
+    <div class="row"><span>Oldest check</span><b>11 days ago</b></div>
+    <div class="row tot"><span>Paid placements</span><span>0</span></div>
+  </div>
+</section>
+
+<section class="wrap" id="explore" aria-labelledby="exh">
+  <h2 id="exh" class="sr-only" style="position:absolute;left:-9999px">All providers</h2>
+  <div class="tools">
+    <label class="search" for="q"><span aria-hidden="true">⌕</span><input id="q" type="search" placeholder="Search providers or models, e.g. gpt-oss" aria-label="Search providers or models"></label>
+    <div class="seg" role="group" aria-label="Scope"><button type="button" aria-pressed="true">LLMs</button><button type="button" aria-pressed="false">All AI APIs</button></div>
+  </div>
+  <div class="chips" role="group" aria-label="Filters">
+    <button class="chip" type="button" aria-pressed="true">No card</button>
+    <button class="chip" type="button" aria-pressed="false">No phone</button>
+    <button class="chip" type="button" aria-pressed="false">Commercial use OK</button>
+    <button class="chip" type="button" aria-pressed="false">Doesn't train on prompts</button>
+    <button class="chip" type="button" aria-pressed="false">OpenAI-compatible</button>
+  </div>
+  <div class="tscroll" role="region" aria-label="Providers table" tabindex="0">
+  <table>
+    <thead><tr><th>Provider</th><th>Type</th><th>Free limits</th><th>Card · Phone · Commercial · Training</th><th>Receipt</th></tr></thead>
+    <tbody>
+    <tr><td><a class="pname" href="#provider">Groq</a><div class="mods"><span class="mod" style="--c:var(--m-text)">text</span><span class="mod" style="--c:var(--m-audio)">audio</span></div></td>
+      <td><span class="type on">Ongoing</span></td>
+      <td class="num">30 <small>RPM</small> · 1K <small>RPD</small><br>200K <small>tokens/day</small></td>
+      <td><div class="flags"><span class="flag y">✓ no card</span><span class="flag u">? phone</span><span class="flag u">? commercial</span><span class="flag y">✓ no training</span></div></td>
+      <td><span class="seal">✓ 24 Nov · source</span></td></tr>
+    <tr><td><a class="pname" href="#provider">Google Gemini API</a><div class="mods"><span class="mod" style="--c:var(--m-text)">text</span><span class="mod" style="--c:var(--m-vision)">vision</span><span class="mod" style="--c:var(--m-emb)">embed</span><span class="mod" style="--c:var(--m-audio)">audio</span></div></td>
+      <td><span class="type on">Ongoing</span></td>
+      <td class="num">Per model <small>· see sheet</small></td>
+      <td><div class="flags"><span class="flag y">✓ no card</span><span class="flag y">✓ no phone</span><span class="flag y">✓ commercial</span><span class="flag n">✕ trains on prompts</span></div></td>
+      <td><span class="seal">✓ 14 Nov · source</span></td></tr>
+    <tr><td><a class="pname" href="#provider">OpenRouter</a><div class="mods"><span class="mod" style="--c:var(--m-text)">text</span><span class="mod" style="--c:var(--m-vision)">vision</span></div></td>
+      <td><span class="type on">Ongoing</span></td>
+      <td class="num">20 <small>RPM</small> · 50 <small>RPD</small></td>
+      <td><div class="flags"><span class="flag u">? card</span><span class="flag u">? phone</span><span class="flag u">? commercial</span><span class="flag u">? training</span></div></td>
+      <td><span class="seal">✓ 24 Nov · source</span></td></tr>
+    <tr><td><a class="pname" href="#provider">Cloudflare Workers AI</a><div class="mods"><span class="mod" style="--c:var(--m-text)">text</span><span class="mod" style="--c:var(--m-emb)">embed</span><span class="mod" style="--c:var(--m-image)">image</span><span class="mod" style="--c:var(--m-audio)">audio</span></div></td>
+      <td><span class="type on">Ongoing</span></td>
+      <td class="num">10,000 <small>Neurons/day</small><br>300 <small>RPM</small></td>
+      <td><div class="flags"><span class="flag y">✓ no card</span><span class="flag u">? phone</span><span class="flag u">? commercial</span><span class="flag y">✓ no training</span></div></td>
+      <td><span class="seal">✓ 24 Nov · source</span></td></tr>
+    <tr><td><a class="pname" href="#provider">Cerebras</a><div class="mods"><span class="mod" style="--c:var(--m-text)">text</span></div></td>
+      <td><span class="type tr">Trial · 30 days</span></td>
+      <td class="num">$5 <small>credit</small></td>
+      <td><div class="flags"><span class="flag n">✕ card</span><span class="flag u">? phone</span><span class="flag y">✓ commercial</span><span class="flag y">✓ no training</span></div></td>
+      <td><span class="seal">✓ 24 Nov · source</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="wrap section" id="provider" aria-labelledby="pph">
+  <h2 id="pph">Provider page</h2>
+  <div class="pp">
+    <article class="receipt">
+      <span class="type on">Ongoing free tier · OpenAI-compatible</span>
+      <h3>Groq</h3>
+      <p class="sub">Lowest-latency inference for open-weight models.</p>
+      <div class="limits">
+        <div><b>30</b><span>req / min</span></div>
+        <div><b>1,000</b><span>req / day</span></div>
+        <div><b>200K</b><span>tokens / day</span></div>
+      </div>
+      <div class="lines">
+        <div class="row"><span>Models</span><span>gpt-oss-120b, gpt-oss-20b, qwen3.8-27b</span></div>
+        <div class="row"><span>Scope</span><span>per organization, not per key</span></div>
+        <div class="row"><span>Checked</span><span>2026-11-24</span></div>
+      </div>
+      <blockquote class="quote">“By default, Groq does not retain customer data for inference requests.”
+        <cite>Groq, “Your data” · console.groq.com/docs/your-data · checked 2026-11-24</cite></blockquote>
+      <div class="btns"><a class="btn primary" href="https://console.groq.com/docs/quickstart">Get a free key ↗</a><a class="btn" href="https://console.groq.com/docs/rate-limits">Rate-limit docs ↗</a></div>
+    </article>
+    <div class="side">
+      <div class="card"><h2>Fine print</h2>
+        <div class="fgrid">
+          <div class="fitem y"><div class="k">Credit card</div><div class="v">✓ Not required</div></div>
+          <div class="fitem u"><div class="k">Phone</div><div class="v">? Not stated</div></div>
+          <div class="fitem u"><div class="k">Commercial use</div><div class="v">? Not stated</div></div>
+          <div class="fitem y"><div class="k">Trains on prompts</div><div class="v">✓ No</div></div>
+        </div>
+      </div>
+      <div class="card"><h2>Quickstart</h2>
+<pre><code>from openai import OpenAI
+client = OpenAI(
+  base_url="https://api.groq.com/openai/v1",
+  api_key=os.environ["GROQ_API_KEY"])
+client.chat.completions.create(
+  model="openai/gpt-oss-120b",
+  messages=[{"role":"user","content":"Hi"}])</code></pre></div>
+      <div class="card"><h2>Changes</h2>
+        <div class="change"><span>24 Nov</span><b>wording</b><span>Updated the catch, commercial-use terms, phone requirement</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section" id="brand" aria-labelledby="bh">
+  <h2 id="bh">Brand sheet</h2>
+  <div class="sheetgrid">
+    <div class="sw" style="--c:var(--ink)"><i></i><div>ink · text</div></div>
+    <div class="sw" style="--c:var(--stamp)"><i></i><div>stamp · brand</div></div>
+    <div class="sw" style="--c:var(--ok)"><i></i><div>yes / verified</div></div>
+    <div class="sw" style="--c:var(--unk)"><i></i><div>not stated</div></div>
+    <div class="sw" style="--c:var(--bad)"><i></i><div>no / blocker</div></div>
+    <div class="sw" style="--c:var(--chg)"><i></i><div>changed</div></div>
+    <div class="sw" style="--c:var(--trial)"><i></i><div>trial</div></div>
+    <div class="sw" style="--c:var(--m-image)"><i></i><div>image</div></div>
+  </div>
+  <div class="ogs" style="margin-top:20px">
+    <div class="og" role="img" aria-label="Social card for the home page">
+      <div class="brand" style="font-size:clamp(9px,1.3vw,15px)"><svg viewBox="0 0 32 32" aria-hidden="true" style="width:1.8em;height:1.8em"><path d="M7 3h18a2 2 0 0 1 2 2v24l-3.33-2-3.34 2-3.33-2-3.33 2-3.34-2L5 29V5a2 2 0 0 1 2-2z" fill="var(--ink)"/><path d="M10.5 15.5l4 4 7.5-8" fill="none" stroke="var(--paper)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Free LLM API Hub</div>
+      <div class="t">Free LLM APIs,<br>with receipts.</div>
+      <div class="n"><div>64<span>PROVIDERS</span></div><div>30<span>ONGOING</span></div><div>0<span>ADS</span></div></div>
+    </div>
+    <div class="og" role="img" aria-label="Social card for the Groq page">
+      <span class="seal">✓ verified 24 Nov 2026</span>
+      <div class="brand" style="font-size:clamp(9px,1.3vw,15px)">freellmapihub.com/p/groq</div>
+      <div class="t">Groq</div>
+      <div class="n"><div>30<span>RPM</span></div><div>1K<span>RPD</span></div><div>200K<span>TOKENS/DAY</span></div></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="wrap">Typefaces: Martian Mono and Instrument Sans (SIL OFL 1.1). Prototype only.</footer>
+<script>
+document.querySelectorAll('.seg button,.chip').forEach(b=>b.addEventListener('click',()=>{
+  if(b.closest('.seg')) b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed', b.closest('.seg')?'true':String(b.getAttribute('aria-pressed')!=='true'));
+}));
+</script>
