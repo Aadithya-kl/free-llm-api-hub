@@ -17,3 +17,10 @@
 ## Also include (2026-11-26)
 
 - Fix in the hero restyle (PR 5): on phones the generated pages' hero breadcrumb, title and lede touch the screen edge. Cause: `site/styles.css` `.page-hero .wrap { padding: 34px 0 26px; }` overrides the side padding of `.wrap` (`padding: 0 24px`). Keep a side gutter of at least 16px. Issue #831 was closed in favour of this.
+
+## From the site QA (2026-11-26): include in the stack
+
+- **#846, provider page order (UX):** What's free + key figures → "Get a free key" + "Copy base URL" → quickstart snippet → requirements (collapsible) → score on ONE line (not a big block). Remove the empty "What's free" line. Add a "Compare with…" link.
+- **#846:** reset `border-top` and `padding-top` on `.prov-summary h2`. Make sure the side gutter (≥16px) holds on `.hero-inner` and on every `.page-hero .wrap`, not only on the provider page.
+- **#845:** make sure adding the aura doesn't make the explorer's name/type column overflow again.
+- **Home density** is handled in a separate PR, `feat/home-density`: one primary "Find my free API" CTA, a single explorer control bar, shorter rows and a compact cookie banner. Keep the stack's hero changes compatible with it, and merge or cascade main when that PR lands.
