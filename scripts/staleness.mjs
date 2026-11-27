@@ -10,6 +10,7 @@ import { dirname, join } from 'node:path';
 import { SLA_DAYS, DUE_SOON_DAYS, ageInDays, freshnessStatus } from './lib/rules.mjs';
 import { weeklyPlan, WEEKLY_CAP, MIN_AGE_DAYS, PACE_FLOOR } from './lib/pacing.mjs';
 import { freshnessHistogram, histogramMarkdown, CLUSTER_LIMIT, HISTOGRAM_WEEKS } from './lib/freshness-histogram.mjs';
+import { parseMode } from './lib/regenerate.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Same bucketing the freshness badge is graded on — imported from rules.mjs, not
@@ -19,7 +20,18 @@ const OVERDUE = SLA_DAYS;
 
 import { resolve } from 'node:path';
 
-export function stalenessWorklist(providers, now = new Date()) {
+// The regeneration mode the footer is written for, read the way verify.yml reads it: the REGEN_MODE variable when it
+// has a value, otherwise .github/regen-mode (docs/regeneration-bot.md). parseMode() turns anything else into `off`.
+export function regenMode({ env = process.env, root = ROOT } = {}) {
+  if (String(env.REGEN_MODE ?? '').trim()) return parseMode(env.REGEN_MODE);
+  try {
+    return parseMode(readFileSync(join(root, '.github/regen-mode'), 'utf8'));
+  } catch {
+    return parseMode('');
+  }
+}
+
+export function stalenessWorklist(providers, now = new Date(), { mode = regenMode() } = {}) {
   const ageDays = (d) => ageInDays(d, now);
   const firstSentence = (s) => (s || '').split(/(?<=\.)\s/)[0].slice(0, 160);
 
@@ -102,7 +114,14 @@ export function stalenessWorklist(providers, now = new Date()) {
   out.push(unverified.length ? unverified.map(uline).join('\n') : '_None._');
   out.push('');
   out.push('---');
-  out.push("**To clear an item:** re-check the provider's own docs, update the entry in `data/providers.json` (numbers + `last_verified` = today, or set `verified: false` with a note), run `npm run validate` (and `npm run build && npm test` if you have the project set up), **commit only `data/providers.json`, `data/quotes.json` if the quote helper changed it, and a changelog fragment — the regeneration bot commits derived files after the merge**, and open a PR. Full ritual: [docs/update-playbook.md](../blob/main/docs/update-playbook.md).");
+  // Who commits the derived files depends on the regeneration mode (CONTRIBUTING.md): the bot in push mode, the
+  // contributor in any other mode, where the Dataset integrity check fails until they are in sync.
+  const m = parseMode(mode);
+  const sources = '`data/providers.json`, `data/quotes.json` if the quote helper changed it, `data/probe-report.json` if you ran `npm run probe -- --write`';
+  const steps = m === 'push'
+    ? `run \`npm run validate\` (and \`npm run build && npm test\` if you have the project set up), **commit only ${sources}, and a changelog fragment — the regeneration bot commits derived files after the merge**`
+    : `run \`npm run validate\`, then \`npm run build\` (and \`npm run og\` if the OG check reports drift) and \`npm test\`, **commit ${sources}, a changelog fragment and the regenerated files — the regeneration bot is not committing derived files (mode \`${m}\`), so the Dataset integrity check fails until they are in sync**`;
+  out.push(`**To clear an item:** re-check the provider's own docs, update the entry in \`data/providers.json\` (numbers + \`last_verified\` = today, or set \`verified: false\` with a note), ${steps}, and open a PR. Full ritual: [docs/update-playbook.md](../blob/main/docs/update-playbook.md).`);
 
   return out.join('\n');
 }
