@@ -4,7 +4,8 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { stalenessWorklist } from './staleness.mjs';
+import { regenMode, stalenessWorklist } from './staleness.mjs';
+import { parseMode } from './lib/regenerate.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const NOW = new Date('2026-10-18T12:00:00Z');
@@ -230,9 +231,11 @@ test('empty dataset renders placeholder text for all sections and zero summary',
   assert.match(md, /### 📅 This week's batch — 0\n[^\n]+\n_None\._/);
 });
 
+const footerLine = (md) => md.split('\n').find((line) => line.startsWith('**To clear an item:**'));
+
 test('footer tells contributors to commit only source files and leave derived files to the regeneration bot', () => {
-  const md = stalenessWorklist([], NOW);
-  const footer = md.split('\n').find((line) => line.startsWith('**To clear an item:**'));
+  const md = stalenessWorklist([], NOW, { mode: 'push' });
+  const footer = footerLine(md);
 
   assert.ok(footer, 'footer line is present');
   assert.match(footer, /regeneration bot/);
@@ -240,6 +243,39 @@ test('footer tells contributors to commit only source files and leave derived fi
   assert.match(footer, /`npm run validate`/);
   assert.match(footer, /\[docs\/update-playbook\.md\]\(\.\.\/blob\/main\/docs\/update-playbook\.md\)/);
   assert.doesNotMatch(md, /commit the regenerated/);
+});
+
+test('outside push mode the footer asks contributors to build and commit the regenerated files', () => {
+  for (const mode of ['off', 'shadow', 'unknown']) {
+    const md = stalenessWorklist([], NOW, { mode });
+    const footer = footerLine(md);
+
+    assert.ok(footer, `footer line is present (${mode})`);
+    assert.match(footer, /`npm run validate`, then `npm run build` \(and `npm run og` if the OG check reports drift\)/, mode);
+    assert.match(footer, /a changelog fragment and the regenerated files/, mode);
+    assert.match(footer, /Dataset integrity check fails until they are in sync/, mode);
+    assert.match(footer, new RegExp(`mode \`${parseMode(mode)}\``), mode);
+    assert.match(footer, /\[docs\/update-playbook\.md\]\(\.\.\/blob\/main\/docs\/update-playbook\.md\)/, mode);
+    assert.doesNotMatch(footer, /commit only/, mode);
+    assert.doesNotMatch(footer, /bot commits derived files after the merge/, mode);
+  }
+});
+
+test('footer lists data/probe-report.json for contributors who ran the live probe, in every mode', () => {
+  for (const mode of ['push', 'off', 'shadow']) {
+    const footer = footerLine(stalenessWorklist([], NOW, { mode }));
+    assert.match(footer, /`data\/probe-report\.json` if you ran `npm run probe -- --write`/, mode);
+  }
+});
+
+test('the default mode is REGEN_MODE when set, otherwise .github/regen-mode', () => {
+  const fileMode = parseMode(readFileSync(join(ROOT, '.github/regen-mode'), 'utf8'));
+  assert.equal(regenMode({ env: {} }), fileMode);
+  assert.equal(regenMode({ env: { REGEN_MODE: ' ' } }), fileMode);
+  assert.equal(regenMode({ env: { REGEN_MODE: 'off' } }), 'off');
+  assert.equal(regenMode({ env: { REGEN_MODE: 'Push' } }), 'push');
+  assert.equal(regenMode({ env: {}, root: join(ROOT, 'no-such-dir') }), 'off');
+  assert.equal(stalenessWorklist([], NOW, { mode: regenMode() }), stalenessWorklist([], NOW));
 });
 
 test('top-level CLI execution matches stalenessWorklist on data/providers.json and exits 0', () => {
